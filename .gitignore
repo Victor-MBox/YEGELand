@@ -1,0 +1,39 @@
+# Системные файлы macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Треки ресурсов macOS
+Icon?
+._*
+
+# Лог-файлы
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Файлы временных данных
+*.tmp
+*.swp
+*.swo
+*.swn
+*.css.map
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# IDE/редакторы
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Кэш системы
+*.cache
+.cache/
+
+#Composer
+/composer.phar

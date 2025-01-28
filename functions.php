@@ -93,3 +93,60 @@ function handle_like_dislike()
 }
 add_action('wp_ajax_like_dislike', 'handle_like_dislike');
 add_action('wp_ajax_nopriv_like_dislike', 'handle_like_dislike');
+
+
+// Новый раздел «IP-адреса голосования» в Инстументах
+function yegeland_register_tools_submenu()
+{
+    add_management_page(
+        'IP-адреса голосования',
+        'IP-адреса голосования',
+        'manage_options',
+        'ip-voting-logs',
+        'yegeland_render_tools_page'
+    );
+}
+add_action('admin_menu', 'yegeland_register_tools_submenu');
+
+function yegeland_render_tools_page()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'post_likes';
+    $posts_table = $wpdb->prefix . 'posts';
+
+    $results = $wpdb->get_results("
+        SELECT l.id, l.ip_address, l.vote, p.post_title 
+        FROM $table_name AS l
+        LEFT JOIN $posts_table AS p ON l.post_id = p.ID
+    ", ARRAY_A);
+
+    echo '<div class="wrap">';
+    echo '<h1>IP-адреса голосования</h1>';
+    echo '<table class="wp-list-table widefat fixed striped">';
+    echo '<thead>
+            <tr>
+                <th>ID</th>
+                <th>IP-адрес</th>
+                <th>Голос</th>
+                <th>Название статьи</th>
+            </tr>
+          </thead>';
+    echo '<tbody>';
+
+    if ($results) {
+        foreach ($results as $row) {
+            echo '<tr>';
+            echo '<td>' . esc_html($row['id']) . '</td>';
+            echo '<td>' . esc_html($row['ip_address']) . '</td>';
+            echo '<td>' . ($row['vote'] == 1 ? 'Лайк' : 'Дизлайк') . '</td>';
+            echo '<td>' . esc_html($row['post_title'] ? $row['post_title'] : 'Нет названия') . '</td>';
+            echo '</tr>';
+        }
+    } else {
+        echo '<tr><td colspan="4">Нет данных</td></tr>';
+    }
+
+    echo '</tbody>';
+    echo '</table>';
+    echo '</div>';
+}
